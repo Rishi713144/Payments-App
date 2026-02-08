@@ -2,6 +2,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
 import prisma from "@repo/db/client";
+import { revalidatePath } from "next/cache";
 
 export async function p2pTransfer(to: string, amount: number) {
     try {
@@ -80,6 +81,10 @@ export async function p2pTransfer(to: string, amount: number) {
                 },
             });
         });
+
+        revalidatePath('/dashboard');
+        revalidatePath('/transactions');
+        revalidatePath('/transfer');
 
         return {
             success: true,

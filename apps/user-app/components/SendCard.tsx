@@ -1,11 +1,10 @@
 "use client";
 
 import { Button } from "@repo/ui/button";
-import { Card } from "@repo/ui/card";
-import { Center } from "@repo/ui/center";
 import { TextInput } from "@repo/ui/textinput";
 import { useState } from "react";
 import { p2pTransfer } from "../app/lib/actions/p2pTransfer";
+import { ArrowRight, Send } from "lucide-react";
 
 export function SendCard() {
   const [number, setNumber] = useState("");
@@ -47,16 +46,18 @@ export function SendCard() {
   };
 
   return (
-    <Card title="Send Money">
-      <div className="space-y-4">
-        <TextInput
-          label="Amount"
-          placeholder="Enter amount"
-          onChange={(value) => {
-            setError("");
-            setAmount(value);
-          }}
-        />
+    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="p-3 bg-indigo-50 rounded-full">
+            <Send className="w-6 h-6 text-indigo-600" />
+        </div>
+        <div>
+            <h2 className="text-xl font-bold text-gray-900">Send Money</h2>
+            <p className="text-sm text-gray-500">Instant P2P transfers</p>
+        </div>
+      </div>
+      
+      <div className="space-y-6">
         <TextInput
           label="Phone Number"
           placeholder="Enter recipient's number"
@@ -65,26 +66,38 @@ export function SendCard() {
             setNumber(value);
           }}
         />
+
+        <TextInput
+          label="Amount"
+          placeholder="Enter amount"
+          onChange={(value) => {
+            setError("");
+            setAmount(value);
+          }}
+        />
         
         {error && (
-          <div className="text-red-500 text-sm p-2 bg-red-50 rounded border border-red-200">
-            {error}
+          <div className="flex items-center text-red-600 text-sm bg-red-50 p-3 rounded-lg border border-red-100">
+            <span className="mr-2">●</span> {error}
           </div>
         )}
 
-        <Center>
-          <Button
-            onClick={handleTransfer}
-            disabled={isDisabled}
-          >
-            {loading ? "Processing..." : "Send Money"}
-          </Button>
-        </Center>
-
-        <div className="text-sm text-gray-500 text-center">
-          Transfers are processed instantly and securely
+        <div className="pt-2">
+            <Button
+                onClick={handleTransfer}
+                disabled={isDisabled}
+            >
+                <div className="flex items-center justify-center space-x-2">
+                    <span>{loading ? "Processing..." : "Send Securely"}</span>
+                    {!loading && <ArrowRight className="w-4 h-4" />}
+                </div>
+            </Button>
+        </div>
+        
+        <div className="text-sm text-gray-400 text-center">
+          Transfers are encrypted and processed instantly
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

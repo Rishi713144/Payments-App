@@ -26,29 +26,35 @@ export default function Sidebar() {
   return (
     <aside
       className={`
-        h-screen bg-white border-r border-slate-200
+        h-full bg-white border-r border-slate-200
         transition-all duration-300 ease-in-out
-        ${collapsed ? "w-20" : "w-64"}
+        ${collapsed ? "w-20" : "w-72"}
       `}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-slate-100">
+      {/* Header - Brand/Toggle Section */}
+      <div className="flex items-center justify-between h-16 px-6">
         {!collapsed && (
-          <span className="text-lg font-bold text-indigo-600">
-            Menu 
+          <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em]">
+            Menu
           </span>
         )}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded-md hover:bg-slate-100 transition"
+          className={`
+            p-2 rounded-xl transition-all duration-200
+            ${collapsed ? "mx-auto" : ""}
+            hover:bg-slate-50 text-slate-400 hover:text-indigo-600
+          `}
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
         </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="py-4 space-y-1">
+      {/* Navigation Links */}
+      <nav className="px-4 space-y-1.5">
+        
+        
         {items.map(({ href, title, icon: Icon }) => {
           const isActive =
             pathname === href ||
@@ -59,50 +65,53 @@ export default function Sidebar() {
               key={href}
               onClick={() => router.push(href)}
               className={`
-                group relative w-full flex items-center gap-3
-                px-3 py-3 mx-2 rounded-lg text-left
-                transition-all duration-200
+                group relative w-full flex items-center gap-4
+                px-3 py-3 rounded-2xl text-left
+                transition-all duration-300
                 ${
                   isActive
-                    ? "bg-indigo-50 text-indigo-600 font-semibold"
-                    : "text-slate-600 hover:bg-slate-100"
+                    ? "bg-indigo-50/50 text-indigo-600"
+                    : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-900"
                 }
               `}
             >
-              {/* Active indicator */}
+              {/* Active Glow Indicator */}
               {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-indigo-600 rounded-r-full" />
+                <span className="absolute -left-1 top-1/2 -translate-y-1/2 h-6 w-1.5 bg-indigo-600 rounded-full shadow-[0_0_12px_rgba(79,70,229,0.5)]" />
               )}
 
-              {/* Icon */}
-              <div
-                className={`
-                  w-9 h-9 flex items-center justify-center rounded-md
-                  ${
-                    isActive
-                      ? "bg-indigo-100 text-indigo-600"
-                      : "bg-slate-100 text-slate-400 group-hover:text-slate-600"
-                  }
-                `}
-              >
-                <Icon size={18} strokeWidth={isActive ? 2.4 : 2} />
+              {/* Icon Container with subtle animation */}
+              <div className={`
+                flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300
+                ${isActive ? "bg-white shadow-sm ring-1 ring-black/5" : "bg-transparent"}
+              `}>
+                <Icon 
+                  size={20} 
+                  strokeWidth={isActive ? 2.5 : 2}
+                  className={isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}
+                />
               </div>
 
-              {/* Label */}
+              {/* Text Label */}
               {!collapsed && (
-                <span className="text-sm tracking-tight">{title}</span>
-              )}
-
-              {/* Tooltip */}
-              {collapsed && (
-                <span className="
-                  absolute left-full ml-3 px-3 py-1 text-xs
-                  bg-slate-900 text-white rounded-md
-                  opacity-0 group-hover:opacity-100
-                  whitespace-nowrap pointer-events-none
-                ">
+                <span className={`text-[13.5px] tracking-tight transition-all duration-200 ${isActive ? "font-bold" : "font-medium"}`}>
                   {title}
                 </span>
+              )}
+
+              {/* Tooltip for collapsed view */}
+              {collapsed && (
+                <div className="
+                  absolute left-full ml-6 px-3 py-2 text-[11px] font-bold
+                  bg-slate-900 text-white rounded-xl shadow-2xl
+                  opacity-0 group-hover:opacity-100
+                  translate-x-[-10px] group-hover:translate-x-0
+                  transition-all duration-200
+                  whitespace-nowrap pointer-events-none z-[100]
+                ">
+                  {title}
+                  <div className="absolute top-1/2 -left-1 -translate-y-1/2 border-8 border-transparent border-r-slate-900" />
+                </div>
               )}
             </button>
           );

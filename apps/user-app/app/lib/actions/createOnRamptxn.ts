@@ -3,6 +3,7 @@
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth";
+import { revalidatePath } from "next/cache";
 
 export async function createOnRampTransaction(provider: string, amount: number) {
     // Ideally the token should come from the banking provider (hdfc/axis)
@@ -23,6 +24,8 @@ export async function createOnRampTransaction(provider: string, amount: number) 
             amount: amount * 100
         }
     });
+
+    revalidatePath('/transfer');
 
     return {
         message: "Done"

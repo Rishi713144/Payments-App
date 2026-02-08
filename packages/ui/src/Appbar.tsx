@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "./button";
 import { ShieldCheck, User as UserIcon } from "lucide-react";
-import { useState, useEffect } from "react";
 
 interface AppbarProps {
     user?: {
@@ -18,63 +16,60 @@ export const Appbar = ({
     onSignin,
     onSignout
 }: AppbarProps) => {
-    const [visitorCount, setVisitorCount] = useState(14203);
-
-    useEffect(() => {
-        const stored = localStorage.getItem("payment_app_visitor_count");
-        const current = stored ? parseInt(stored) : 14203;
-        const next = current + 1;
-        setVisitorCount(next);
-        localStorage.setItem("payment_app_visitor_count", next.toString());
-    }, []);
-
     return (
-        <nav className="flex justify-between items-center px-6 py-3 border-b border-slate-200 bg-white sticky top-0 z-50">
+        <nav className="flex justify-between items-center px-8 py-3.5 border-b border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-[100]">
             {/* Logo Section */}
-            <div className="flex items-center gap-2 cursor-pointer select-none">
-                <div className="bg-indigo-600 p-1.5 rounded-lg">
+            <div className="flex items-center gap-3 cursor-pointer select-none group">
+                <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-200 transition-transform group-hover:scale-105">
                     <ShieldCheck className="text-white w-5 h-5" />
                 </div>
-                <span className="text-xl font-bold tracking-tight text-slate-900">
-                    PaySafe
-                </span>
+                <div className="flex flex-col">
+                    <span className="text-lg font-black tracking-tight text-slate-900 leading-none">
+                        PaySafe
+                    </span>
+                    <span className="text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em] mt-0.5">
+                        Enterprise
+                    </span>
+                </div>
             </div>
 
             {/* Actions Section */}
-            <div className="flex items-center gap-4">
-                {user && (
-                    <div className="hidden md:flex flex-col items-end mr-2">
-                        <span className="text-sm font-semibold text-slate-700 leading-none">
-                            {user.name}
-                        </span>
-                        <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-1">
-                            Verified Account
-                        </span>
-                    </div>
-                )}
+            <div className="flex items-center gap-6">
+                {user ? (
+                    <div className="flex items-center gap-4">
+                        <div className="hidden border-r border-slate-200 pr-4 md:flex flex-col items-end">
+                            <span className="text-sm font-bold text-slate-900 leading-none">
+                                {user.name}
+                            </span>
+                            <div className="flex items-center gap-1.5 mt-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                    Online
+                                </span>
+                            </div>
+                        </div>
 
-                <div className="flex items-center gap-3">
-                    {user && (
-                        <div className="h-9 w-9 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200">
-                            <UserIcon className="w-5 h-5 text-slate-500" />
-                        </div>
-                    )}
-                    
-                    {user ? (
-                         <Button onClick={onSignout}>Logout</Button>
-                    ) : (
-                         <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100">
-                             <div className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl flex items-center justify-center border border-slate-200 shadow-sm transition-hover hover:border-indigo-200">
+                                <UserIcon className="w-5 h-5 text-slate-600" />
                             </div>
-                            <div className="flex flex-col leading-none">
-                                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Visitors</span>
-                                <span className="text-sm font-bold text-slate-700 font-mono">{visitorCount.toLocaleString()}</span>
-                            </div>
+                            
+                            <button 
+                                onClick={onSignout}
+                                className="px-4 py-2 text-sm font-bold text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+                            >
+                                Sign Out
+                            </button>
                         </div>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <button 
+                        onClick={onSignin}
+                        className="px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95"
+                    >
+                        Sign In
+                    </button>
+                )}
             </div>
         </nav>
     );

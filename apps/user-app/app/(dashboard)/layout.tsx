@@ -8,13 +8,15 @@ export default function Layout({
 }) {
   return (
     <SessionAuth>
-      <div className="flex min-h-screen bg-slate-50">
-        {/* Sidebar controls its own width */}
+      <div className="flex h-[calc(100vh-64px)] overflow-hidden">
+        {/* Sidebar */}
         <Sidebar />
 
-        {/* Main content */}
-        <main className="flex-1 p-6">
-          {children}
+        {/* Main content wrapper with internal scrolling */}
+        <main className="flex-1 overflow-y-auto bg-slate-50/50">
+          <div className="max-w-7xl mx-auto p-4 md:p-8">
+            {children}
+          </div>
         </main>
       </div>
     </SessionAuth>

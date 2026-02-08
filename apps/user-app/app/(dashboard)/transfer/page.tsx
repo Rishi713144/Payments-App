@@ -1,7 +1,6 @@
 import prisma from "@repo/db/client";
 import { AddMoney } from "../../../components/AddMoneyCard";
 import { BalanceCard } from "../../../components/BalanceCard";
-import { OnRampTransactions } from "../../../components/OnRampTransactions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 
@@ -19,28 +18,8 @@ async function getBalance() {
   };
 }
 
-async function getOnRampTransactions() {
-  const session = await getServerSession(authOptions);
-  const txns = await prisma.onRampTransaction.findMany({
-    where: {
-      userId: Number(session?.user?.id),
-    },
-    orderBy: {
-      startTime: "desc",
-    },
-  });
-
-  return txns.map((t) => ({
-    time: t.startTime,
-    amount: t.amount,
-    status: t.status,
-    provider: t.provider,
-  }));
-}
-
 export default async function TransferPage() {
   const balance = await getBalance();
-  const transactions = await getOnRampTransactions();
 
   return (
     <div className="min-h-screen w-full bg-slate-50 px-4 py-10">
@@ -64,17 +43,13 @@ export default async function TransferPage() {
             </div>
           </div>
 
-          {/* Right Column – Balance + Transactions */}
+          {/* Right Column – Balance */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
               <BalanceCard
                 amount={balance.amount}
                 locked={balance.locked}
               />
-            </div>
-
-            <div className="rounded-xl bg-white border border-slate-200 shadow-sm p-6">
-              <OnRampTransactions transactions={transactions} />
             </div>
           </div>
         </div>
