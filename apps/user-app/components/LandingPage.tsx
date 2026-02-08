@@ -20,7 +20,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900 selection:bg-indigo-100">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-50 to-white">
+      <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center px-3 py-1 mb-6 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-sm font-medium">
             <span className="flex h-2 w-2 rounded-full bg-indigo-600 mr-2 animate-pulse"></span>
@@ -29,7 +29,7 @@ export default function LandingPage() {
           
           <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-7xl mb-6">
             Secure payments for <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-600 to-violet-600">
               the modern economy.
             </span>
           </h1>

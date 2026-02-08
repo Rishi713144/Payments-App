@@ -2,7 +2,7 @@ import { SendCard } from "../../../components/SendCard";
 
 export default function SendPage() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-slate-100 flex items-center justify-center px-4">
+    <div className="min-h-screen w-full bg-linear-to-b from-slate-50 to-slate-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="mb-6 text-center">

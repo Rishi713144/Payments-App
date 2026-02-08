@@ -53,8 +53,8 @@ export default function Sidebar() {
 
       {/* Navigation Links */}
       <nav className="px-4 space-y-1.5">
-        
-        
+
+
         {items.map(({ href, title, icon: Icon }) => {
           const isActive =
             pathname === href ||
@@ -68,10 +68,9 @@ export default function Sidebar() {
                 group relative w-full flex items-center gap-4
                 px-3 py-3 rounded-2xl text-left
                 transition-all duration-300
-                ${
-                  isActive
-                    ? "bg-indigo-50/50 text-indigo-600"
-                    : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-900"
+                ${isActive
+                  ? "bg-indigo-50/50 text-indigo-600"
+                  : "text-slate-500 hover:bg-slate-50/80 hover:text-slate-900"
                 }
               `}
             >
@@ -85,8 +84,8 @@ export default function Sidebar() {
                 flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-300
                 ${isActive ? "bg-white shadow-sm ring-1 ring-black/5" : "bg-transparent"}
               `}>
-                <Icon 
-                  size={20} 
+                <Icon
+                  size={20}
                   strokeWidth={isActive ? 2.5 : 2}
                   className={isActive ? "text-indigo-600" : "text-slate-400 group-hover:text-slate-600"}
                 />
@@ -105,9 +104,9 @@ export default function Sidebar() {
                   absolute left-full ml-6 px-3 py-2 text-[11px] font-bold
                   bg-slate-900 text-white rounded-xl shadow-2xl
                   opacity-0 group-hover:opacity-100
-                  translate-x-[-10px] group-hover:translate-x-0
+                  translate-x-2.5 group-hover:translate-x-0
                   transition-all duration-200
-                  whitespace-nowrap pointer-events-none z-[100]
+                  whitespace-nowrap pointer-events-none z-100
                 ">
                   {title}
                   <div className="absolute top-1/2 -left-1 -translate-y-1/2 border-8 border-transparent border-r-slate-900" />
