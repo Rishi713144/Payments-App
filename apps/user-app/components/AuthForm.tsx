@@ -18,13 +18,12 @@ export function AuthForm() {
         }
     }, [session.status, router]);
 
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
+
     if (session.status === "authenticated") {
         return null;
     }
-
-    const [phone, setPhone] = useState("");
-
-    const [password, setPassword] = useState("");
 
     return <div className="flex flex-col justify-center items-center h-screen bg-[#ebe6e6]">
         <div className="w-[400px]">
