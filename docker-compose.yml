@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  # ── PostgreSQL Database ──────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-payments}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Database migrations (runs once then exits) ──────────────────
+  db-migrate:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.user-app
+      target: installer
+    command: pnpm --filter @repo/db dlx prisma migrate deploy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-payments}?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── User App (Next.js – port 3001) ─────────────────────────────
+  user-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.user-app
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-payments}?schema=public
+      NEXTAUTH_URL: http://localhost:3001
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-supersecret}
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
+  # ── Merchant App (Next.js – port 3002) ─────────────────────────
+  merchant-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.merchant-app
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-payments}?schema=public
+      NEXTAUTH_URL: http://localhost:3002
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-supersecret}
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
+  # ── Bank Webhook (Express – port 3003) ─────────────────────────
+  bank-webhook:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.bank-webhook
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-payments}?schema=public
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:
