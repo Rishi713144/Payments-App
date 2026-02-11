@@ -3,10 +3,14 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
 import prisma from "@repo/db/client";
 import { ArrowUpRight, ArrowDownLeft, Wallet, Clock } from "lucide-react";
+import { redirect } from "next/navigation";
 
 async function getTransactions() {
     const session = await getServerSession(authOptions);
-    const userId = Number(session?.user?.id);
+    if (!session?.user?.id) {
+        redirect("/api/auth/signin");
+    }
+    const userId = Number(session.user.id);
 
     // Fetch OnRamp (Deposits)
     const onRampTxns = await prisma.onRampTransaction.findMany({

@@ -3,12 +3,16 @@ import { AddMoney } from "../../../components/AddMoneyCard";
 import { BalanceCard } from "../../../components/BalanceCard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../lib/auth";
+import { redirect } from "next/navigation";
 
 async function getBalance() {
   const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    redirect("/api/auth/signin");
+  }
   const balance = await prisma.balance.findFirst({
     where: {
-      userId: Number(session?.user?.id),
+      userId: Number(session.user.id),
     },
   });
 
